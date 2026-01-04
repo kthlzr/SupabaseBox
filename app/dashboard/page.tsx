@@ -12,6 +12,18 @@ export default async function DashboardPage() {
     return redirect('/login')
   }
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, username, avatar_url')
+    .eq('id', user.id)
+    .single()
+
+  let avatarUrl = null
+  if (profile?.avatar_url) {
+    const { data } = supabase.storage.from('avatars').getPublicUrl(profile.avatar_url)
+    avatarUrl = data.publicUrl
+  }
+
   const handleSignOut = async () => {
     'use server'
     const supabase = await createClient()
@@ -23,34 +35,65 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-zinc-950 text-white p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <header className="flex justify-between items-center border-b border-white/10 pb-6">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">
-              Dashboard
-            </h1>
-            <p className="text-zinc-400 mt-1">Manage your account and view your data</p>
+          <div className="flex items-center gap-4">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="h-12 w-12 rounded-xl object-cover border border-white/10"
+              />
+            ) : (
+              <div className="h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <span className="text-zinc-500 font-bold">
+                  {(profile?.full_name || user.email || '?')[0].toUpperCase()}
+                </span>
+              </div>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">
+                Dashboard
+              </h1>
+              <p className="text-zinc-400 mt-1">
+                Welcome back, {profile?.full_name || user.email?.split('@')[0]}
+              </p>
+            </div>
           </div>
-          <form action={handleSignOut}>
-            <button className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium">
-              Sign Out
-            </button>
-          </form>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard/settings"
+              className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium"
+            >
+              Settings
+            </Link>
+            <form action={handleSignOut}>
+              <button className="px-4 py-2 rounded-lg border border-white/10 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium">
+                Sign Out
+              </button>
+            </form>
+          </div>
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
             <h2 className="text-xl font-semibold mb-4 text-zinc-200">User Profile</h2>
             <div className="space-y-4">
+              {profile?.full_name && (
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">Full Name</p>
+                  <p className="text-white mt-1">{profile.full_name}</p>
+                </div>
+              )}
+              {profile?.username && (
+                <div>
+                  <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">Username</p>
+                  <p className="text-white mt-1">@{profile.username}</p>
+                </div>
+              )}
               <div>
                 <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">
                   Email Address
                 </p>
                 <p className="text-white mt-1">{user.email}</p>
-              </div>
-              <div>
-                <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">
-                  Account ID
-                </p>
-                <p className="text-white mt-1 font-mono text-xs">{user.id}</p>
               </div>
             </div>
           </div>

@@ -27,6 +27,8 @@
 - 💾 **Supabase Integration** - Secure database access with `@supabase/ssr`
 - 🎨 **Tailwind CSS 4** - Modern CSS-first styling with custom theme variables
 - 🛡️ **Rate Limiting** - Built-in security middleware for API protection
+- 👤 **User Profiles** - Dedicated profiles table linked to Auth users
+- 🖼️ **Avatar Management** - Profile picture uploads via Supabase Storage
 - ✅ **Type-Safe Validation** - Powered by **Zod 4.x** and React Hook Form
 - 🎯 **Developer Experience** - ESLint, Prettier, and TypeScript pre-configured
 - 📱 **Premium UI** - Responsive glassmorphism design with sleek animations
@@ -66,7 +68,8 @@ npm run dev
 ```
 ├── app/                  # Next.js App Router
 │   ├── auth/callback/    # Supabase auth callback route
-│   ├── dashboard/        # Protected dashboard example
+│   ├── dashboard/        # Protected dashboard
+│   │   └── settings/     # Profile settings page
 │   ├── login/            # Login page logic
 │   ├── signup/           # Signup page logic
 │   ├── reset-password/   # Password reset request
@@ -74,7 +77,8 @@ npm run dev
 │   ├── globals.css       # Tailwind 4 theme & styles
 │   └── layout.tsx        # Root layout & providers
 ├── components/           # UI Components
-│   └── auth/             # Login and Signup forms
+│   ├── auth/             # Login and Signup forms
+│   └── profile/          # Profile and Avatar components
 ├── lib/                  # Utility functions
 │   ├── supabase/         # Client, Server, and Middleware setup
 │   └── rate-limit.ts     # In-memory rate limiting
@@ -164,6 +168,19 @@ import { SocialAuth } from '@/components/auth/social-auth';
 // Hide the entire social auth section
 <SocialAuth show={false} />
 ```
+
+## 👤 User Profiles & Avatars
+
+The boilerplate includes a complete profile management system:
+- **Automatic Creation**: A Supabase trigger creates a profile record on every new signup.
+- **Avatar Uploads**: Integrated with Supabase Storage (`avatars` bucket).
+- **Settings Page**: Pre-built UI at `/dashboard/settings` for users to update their info (Username, Full Name, Avatar).
+
+### Database Setup
+Run the SQL found in [`supabase/schema.sql`](supabase/schema.sql) in your Supabase SQL Editor to set up the:
+- `profiles` table.
+- `handle_new_user` trigger.
+- `avatars` storage bucket and RLS policies.
 
 ## 🚀 Deployment
 
