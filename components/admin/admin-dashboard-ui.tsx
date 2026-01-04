@@ -49,10 +49,10 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
               </Link>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-black text-white tracking-tighter uppercase italic">Control</h1>
+                  <h1 className="text-xl font-black text-white tracking-tighter uppercase italic">Admin Panel</h1>
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                 </div>
-                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest leading-none mt-0.5">Terminal • v1.0.4</p>
+                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest leading-none mt-0.5">System Hub • v1.0.4</p>
               </div>
             </div>
           </div>
@@ -70,14 +70,14 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
             <div>
-              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Network Size</p>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Total Members</p>
               <p className="text-2xl font-black text-white tracking-tighter">{totalUserCount}</p>
             </div>
             <Users className="h-4 w-4 text-zinc-700" />
           </div>
           <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
             <div>
-              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Live Pulse</p>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Online Now</p>
               <div className="flex items-center gap-2">
                 <p className="text-2xl font-black text-emerald-500 tracking-tighter">{onlineUsers.length}</p>
                 <div className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-[8px] font-black text-emerald-500/80 uppercase tracking-tighter">Live</div>
@@ -87,8 +87,8 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
           </div>
           <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
             <div>
-              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">System State</p>
-              <p className="text-2xl font-black text-zinc-300 tracking-tighter uppercase italic">Stable</p>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">System Status</p>
+              <p className="text-2xl font-black text-zinc-300 tracking-tighter uppercase italic">Healthy</p>
             </div>
             <Shield className="h-4 w-4 text-zinc-700" />
           </div>
@@ -97,12 +97,12 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
         {/* Compact Table Section */}
         <section className="space-y-4">
           <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between">
-            <h2 className="text-xs font-black text-zinc-600 uppercase tracking-[0.3em]">Identity Registry</h2>
+            <h2 className="text-xs font-black text-zinc-600 uppercase tracking-[0.3em]">Members</h2>
             <div className="relative group max-w-xs w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-600 group-focus-within:text-emerald-500/50 transition-colors" />
               <input 
                 type="text" 
-                placeholder="Find identity..." 
+                placeholder="Search members..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-2 pl-9 pr-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:bg-white/[0.05] transition-all"
@@ -115,10 +115,10 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-white/5 bg-white/[0.02]">
-                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest">Profile</th>
-                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden md:table-cell">Identity</th>
-                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden lg:table-cell">Access</th>
-                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest text-right">Command</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest">Name</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden md:table-cell">Email Address</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden lg:table-cell">Role</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.03]">
@@ -166,7 +166,7 @@ export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDa
                   ) : (
                     <tr>
                       <td colSpan={4} className="py-12 text-center text-zinc-800">
-                        <p className="text-[10px] font-black uppercase tracking-widest italic opacity-40">Identity not found in registry</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest italic opacity-40">No members found</p>
                       </td>
                     </tr>
                   )}

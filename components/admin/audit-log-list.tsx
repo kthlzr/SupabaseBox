@@ -54,7 +54,7 @@ export function AuditLogList({ logs }: AuditLogListProps) {
       <div className="flex items-center justify-between mb-4 relative z-10">
         <h2 className="text-sm font-black flex items-center gap-2 tracking-tighter text-zinc-400 uppercase">
           <Activity className="h-4 w-4 text-emerald-500/60" />
-          Audit Trail
+          Activity Log
         </h2>
         <div className="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[8px] font-black text-zinc-500 uppercase tracking-widest">
           Recent
@@ -76,7 +76,7 @@ export function AuditLogList({ logs }: AuditLogListProps) {
                     {getUserIdentifier(log)}
                   </div>
                   <div className="text-[9px] text-zinc-600 font-bold uppercase tracking-tight mt-0.5 ml-[85.5px]">
-                    {formatMetadata(log) || 'System recorded action'}
+                    {formatMetadata(log) || 'Action recorded'}
                   </div>
                 </div>
                 <div className="flex items-center gap-1 text-[8px] font-black text-zinc-700 whitespace-nowrap uppercase tracking-tighter">

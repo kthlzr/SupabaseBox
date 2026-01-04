@@ -59,31 +59,31 @@ export default function LoginForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
-        <label className="text-sm font-medium text-zinc-300" htmlFor="email">
-          Email
+        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest" htmlFor="email">
+          Email Address
         </label>
         <input
           {...register('email')}
           id="email"
           type="email"
           placeholder="name@example.com"
-          className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-white outline-none transition-all focus:border-white/20 focus:ring-1 focus:ring-white/20"
+          className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white/10 focus:bg-white/[0.05] transition-all"
         />
-        {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
+        {errors.email && <p className="text-[10px] font-bold text-red-500/80 uppercase tracking-tight">{errors.email.message}</p>}
       </div>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-zinc-300" htmlFor="password">
+          <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest" htmlFor="password">
             Password
           </label>
           <Link
             href="/reset-password"
-            className="text-xs text-zinc-500 hover:text-white transition-colors"
+            className="text-[9px] font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-widest italic"
           >
-            Forgot password?
+            Forgot Password?
           </Link>
         </div>
         <input
@@ -91,24 +91,26 @@ export default function LoginForm({
           id="password"
           type="password"
           placeholder="••••••••"
-          className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-white outline-none transition-all focus:border-white/20 focus:ring-1 focus:ring-white/20"
+          className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white/10 focus:bg-white/[0.05] transition-all"
         />
         {errors.password && (
-          <p className="text-xs text-red-400">{errors.password.message}</p>
+          <p className="text-[10px] font-bold text-red-500/80 uppercase tracking-tight">{errors.password.message}</p>
         )}
       </div>
 
-      {error && <div className="rounded-lg bg-red-400/10 p-3 text-sm text-red-400">{error}</div>}
+      {error && <div className="rounded-xl bg-red-500/5 p-3 border border-red-500/10 text-[10px] font-bold text-red-500/80 uppercase tracking-tight">{error}</div>}
 
       <button
         disabled={isLoading}
         type="submit"
-        className="flex w-full items-center justify-center rounded-lg bg-white p-3 text-sm font-semibold text-black transition-all hover:bg-zinc-200 disabled:opacity-50"
+        className="flex w-full items-center justify-center rounded-xl bg-white py-3 text-[10px] font-black text-black uppercase tracking-widest transition-all hover:bg-zinc-200 disabled:opacity-50 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
       >
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In'}
+        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Sign In'}
       </button>
 
-      <SocialAuth show={showSocialAuth} providers={providers} />
+      <div className="pt-2">
+        <SocialAuth show={showSocialAuth} providers={providers} />
+      </div>
     </form>
   )
 }

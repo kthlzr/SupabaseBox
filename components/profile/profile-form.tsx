@@ -117,23 +117,23 @@ export function ProfileForm({ user }: { user: any }) {
         }}
       />
 
-      <form onSubmit={handleSubmit((data) => updateProfile(data))} className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={handleSubmit((data) => updateProfile(data))} className="space-y-6">
+        <div className="grid gap-6 sm:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-300" htmlFor="email">
-              Email
+            <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest" htmlFor="email">
+              Email Address
             </label>
             <input
               id="email"
               type="text"
               value={user.email}
               disabled
-              className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-zinc-500 outline-none"
+              className="w-full bg-white/[0.01] border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-zinc-700 outline-none cursor-not-allowed"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-300" htmlFor="username">
+            <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest" htmlFor="username">
               Username
             </label>
             <input
@@ -141,16 +141,16 @@ export function ProfileForm({ user }: { user: any }) {
               id="username"
               type="text"
               placeholder="johndoe"
-              className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-white outline-none transition-all focus:border-white/20 focus:ring-1 focus:ring-white/20"
+              className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white/10 focus:bg-white/[0.05] transition-all"
             />
             {errors.username && (
-              <p className="text-xs text-red-400">{errors.username.message}</p>
+              <p className="text-[10px] font-bold text-red-500/80 uppercase tracking-tight">{errors.username.message}</p>
             )}
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-300" htmlFor="full_name">
+          <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest" htmlFor="full_name">
             Full Name
           </label>
           <input
@@ -158,25 +158,25 @@ export function ProfileForm({ user }: { user: any }) {
             id="full_name"
             type="text"
             placeholder="John Doe"
-            className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-white outline-none transition-all focus:border-white/20 focus:ring-1 focus:ring-white/20"
+            className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-white/10 focus:bg-white/[0.05] transition-all"
           />
           {errors.full_name && (
-            <p className="text-xs text-red-400">{errors.full_name.message}</p>
+            <p className="text-[10px] font-bold text-red-500/80 uppercase tracking-tight">{errors.full_name.message}</p>
           )}
         </div>
 
-        <div className="flex items-center gap-4 pt-4">
+        <div className="flex items-center gap-6 pt-4">
           <button
             disabled={updating}
             type="submit"
-            className="flex flex-1 items-center justify-center rounded-lg bg-white p-3 text-sm font-semibold text-black transition-all hover:bg-zinc-200 disabled:opacity-50"
+            className="flex flex-1 items-center justify-center rounded-xl bg-white py-3 text-[10px] font-black text-black uppercase tracking-widest transition-all hover:bg-zinc-200 disabled:opacity-50 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
-            {updating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Changes'}
+            {updating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Changes'}
           </button>
           {saved && (
-            <div className="flex items-center gap-2 text-emerald-400 transition-all">
-              <CheckCircle2 className="h-4 w-4" />
-              <span className="text-sm">Saved!</span>
+            <div className="flex items-center gap-2 text-emerald-500 transition-all animate-in fade-in slide-in-from-right-4">
+              <CheckCircle2 className="h-4 w-4 shadow-[0_0_10px_#10b981]" />
+              <span className="text-[10px] font-black uppercase tracking-widest italic">Saved</span>
             </div>
           )}
         </div>

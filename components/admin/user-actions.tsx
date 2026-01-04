@@ -45,7 +45,7 @@ export function UserActions({ userId, currentRole, userEmail }: UserActionsProps
   if (showConfirm) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-[10px] text-red-400 font-medium">Delete?</span>
+        <span className="text-[10px] text-red-400 font-medium">Permanently delete?</span>
         <button
           onClick={handleDelete}
           disabled={loading}
@@ -69,7 +69,7 @@ export function UserActions({ userId, currentRole, userEmail }: UserActionsProps
       <button
         onClick={handleToggleRole}
         disabled={loading}
-        title={currentRole === 'admin' ? 'Demote to User' : 'Promote to Admin'}
+        title={currentRole === 'admin' ? 'Remove Admin Role' : 'Make Admin'}
         className={`p-2 rounded-lg border transition-colors ${
           currentRole === 'admin' 
             ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' 
@@ -82,8 +82,8 @@ export function UserActions({ userId, currentRole, userEmail }: UserActionsProps
       <button
         onClick={() => setShowConfirm(true)}
         disabled={loading}
-        title="Delete User"
-        className="p-2 rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+        title="Delete Account"
+        className="p-2 rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all shadow-lg"
       >
         <Trash2 className="h-4 w-4" />
       </button>

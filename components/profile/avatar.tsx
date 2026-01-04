@@ -57,29 +57,32 @@ export function Avatar({ uid, url, size, onUpload }: AvatarProps) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-6">
       <div 
-        className="relative flex items-center justify-center overflow-hidden rounded-full border-2 border-white/10 bg-white/5 transition-all hover:border-white/20"
+        className="relative flex items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/5 bg-white/[0.02] transition-all hover:border-white/20 group/avatar shadow-2xl"
         style={{ height: size, width: size }}
       >
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt="Avatar"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform group-hover/avatar:scale-110 duration-700"
           />
         ) : (
-          <User className="h-1/2 w-1/2 text-zinc-500" />
+          <User className="h-1/2 w-1/2 text-zinc-700" />
         )}
         
         <label 
-          className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100 disabled:cursor-not-allowed"
+          className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/60 opacity-0 transition-all group-hover/avatar:opacity-100 disabled:cursor-not-allowed backdrop-blur-sm"
           htmlFor="single"
         >
           {uploading ? (
             <Loader2 className="h-6 w-6 animate-spin text-white" />
           ) : (
-            <Camera className="h-6 w-6 text-white" />
+            <div className="flex flex-col items-center gap-2">
+              <Camera className="h-6 w-6 text-white" />
+              <span className="text-[8px] font-black text-white uppercase tracking-widest">Update</span>
+            </div>
           )}
         </label>
       </div>
@@ -94,7 +97,10 @@ export function Avatar({ uid, url, size, onUpload }: AvatarProps) {
         onChange={uploadAvatar}
         disabled={uploading}
       />
-      <p className="text-xs text-zinc-500">JPG, PNG or GIF. Max 2MB.</p>
+      <div className="text-center space-y-1">
+        <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Profile Picture</p>
+        <p className="text-[8px] font-bold text-zinc-700 uppercase tracking-widest italic">Max 2MB • JPG / PNG / GIF</p>
+      </div>
     </div>
   )
 }
