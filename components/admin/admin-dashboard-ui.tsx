@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { Users, Shield, ArrowLeft, BarChart3, Activity, Mail, Calendar, Search } from 'lucide-react'
 import Link from 'next/link'
 import { UserActions } from '@/components/admin/user-actions'
+import { useRealtime } from '@/hooks/use-realtime'
 
 interface JoinedUser {
   id: string
@@ -23,6 +24,7 @@ interface AdminDashboardUIProps {
 
 export function AdminDashboardUI({ initialUsers, totalUserCount }: AdminDashboardUIProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const { onlineUsers } = useRealtime()
 
   const filteredUsers = useMemo(() => {
     return initialUsers.filter(user => 
@@ -51,6 +53,10 @@ export function AdminDashboardUI({ initialUsers, totalUserCount }: AdminDashboar
                 <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent tracking-tight">
                   Admin Central
                 </h1>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black text-emerald-400 uppercase tracking-widest animate-pulse">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                  Live Now: {onlineUsers.length}
+                </div>
               </div>
               <p className="text-zinc-500 mt-1.5 font-medium ml-1">Command center for your growing community</p>
             </div>
@@ -88,7 +94,9 @@ export function AdminDashboardUI({ initialUsers, totalUserCount }: AdminDashboar
                 <Activity className="h-5 w-5 text-emerald-500/70" />
               </div>
             </div>
-            <p className="text-5xl font-black tracking-tighter text-emerald-400 relative z-10">HIGH</p>
+            <p className="text-5xl font-black tracking-tighter text-emerald-400 relative z-10">
+              {onlineUsers.length} <span className="text-sm text-zinc-600 font-bold uppercase tracking-widest ml-1">Live</span>
+            </p>
           </div>
 
           <div className="group relative p-6 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/10 transition-colors shadow-2xl">
@@ -134,8 +142,15 @@ export function AdminDashboardUI({ initialUsers, totalUserCount }: AdminDashboar
                     <tr key={u.id} className="group/row hover:bg-white/[0.01] transition-all duration-300">
                       <td className="py-6 pr-4">
                         <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 flex items-center justify-center font-black text-lg text-zinc-400 group-hover/row:border-emerald-500/30 group-hover/row:text-emerald-400 transition-all shadow-lg">
-                            {(u.full_name || u.email || '?')[0].toUpperCase()}
+                          <div className="relative">
+                            <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 flex items-center justify-center font-black text-lg text-zinc-400 group-hover/row:border-emerald-500/30 group-hover/row:text-emerald-400 transition-all shadow-lg">
+                              {(u.full_name || u.email || '?')[0].toUpperCase()}
+                            </div>
+                            {onlineUsers.includes(u.id) && (
+                              <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-zinc-950 flex items-center justify-center">
+                                <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                              </div>
+                            )}
                           </div>
                           <div>
                             <p className="font-bold text-zinc-100 group-hover/row:text-white transition-colors leading-none">

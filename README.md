@@ -206,6 +206,17 @@ From the User Directory, admins can:
 - **👑 Role Toggle**: Directly promote users to `admin` or demote to `user`.
 - **🕒 Audit Info**: View "Joined" timestamps for all users.
 
+### ⚡ Realtime Features
+The dashboard includes live presence and event notifications:
+- **Presence**: See exactly who is online with live count and status dots.
+- **Toasts**: Real-time `sonner` notifications when new users join or profiles are updated.
+
+#### Enable Realtime (Required)
+To see live updates and accurate role change notifications, you must configure your `profiles` table:
+1. Go to **Database** > **Publication** in Supabase.
+2. Under **supabase_realtime**, click **Tables**.
+3. Toggle the switch for the `profiles` table to **ON**.
+
 ### Security Implementation
 - **Server Actions**: All administrative actions are implemented via Next.js Server Actions with secondary admin validation.
 - **Service Role**: Utilizes the `SUPABASE_SERVICE_ROLE_KEY` on the server to bypass RLS for master administrative control.

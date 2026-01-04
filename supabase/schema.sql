@@ -15,6 +15,7 @@ create table if not exists profiles (
 
 -- Set up Row Level Security
 alter table profiles enable row level security;
+alter table profiles replica identity full;
 
 -- Policies (Drop and recreate to be idempotent)
 drop policy if exists "Public profiles are viewable by everyone." on profiles;
