@@ -1,13 +1,6 @@
 <div align="center">
   <h1>SupabaseBox</h1>
   <p>A production-ready, minimalist full-stack starter built with Supabase and Next.js, featuring authentication, database, and premium UI</p>
-  
-  <p>
-    <a href="#features">Features</a> •
-    <a href="#quick-start">Quick Start</a> •
-    <a href="#scripts">Scripts</a> •
-    <a href="#deployment">Deployment</a>
-  </p>
 
   <p>
     <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js" />
