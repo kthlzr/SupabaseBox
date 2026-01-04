@@ -29,6 +29,7 @@
 - 🛡️ **Rate Limiting** - Built-in security middleware for API protection
 - 👤 **User Profiles** - Dedicated profiles table linked to Auth users
 - 🖼️ **Avatar Management** - Profile picture uploads via Supabase Storage
+- 🛡️ **Admin Dashboard** - Role-based access control (RBAC) with platform stats and user directory
 - ✅ **Type-Safe Validation** - Powered by **Zod 4.x** and React Hook Form
 - 🎯 **Developer Experience** - ESLint, Prettier, and TypeScript pre-configured
 - 📱 **Premium UI** - Responsive glassmorphism design with sleek animations
@@ -55,6 +56,7 @@ Create a `.env.local` file in the root:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key # Used for Admin Dashboard
 ```
 
 ### 3. Run Development Server
@@ -81,6 +83,10 @@ npm run dev
 │   └── profile/          # Profile and Avatar components
 ├── lib/                  # Utility functions
 │   ├── supabase/         # Client, Server, and Middleware setup
+│   │   ├── client.ts     # Client-side Supabase
+│   │   ├── server.ts     # Server-side Supabase
+│   │   ├── admin.ts      # Admin auth helpers
+│   │   └── service-role.ts # Service Role client (Master)
 │   └── rate-limit.ts     # In-memory rate limiting
 ├── proxy.ts              # Next.js 16 Middleware proxy
 ├── package.json          # Scripts and dependencies
@@ -182,12 +188,47 @@ Run the SQL found in [`supabase/schema.sql`](supabase/schema.sql) in your Supaba
 - `handle_new_user` trigger.
 - `avatars` storage bucket and RLS policies.
 
-## 🚀 Deployment
+## 🛡️ Admin Dashboard & RBAC
 
-### Vercel
-1. Connect your GitHub repository.
-2. Add your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environment variables.
-3. Deploy!
+The boilerplate includes a secure Admin Dashboard at `/admin` that merges data from Supabase Auth and the Profiles table.
+
+### Features
+- **Unified List**: Displays all users from `auth.users` merged with metadata from `public.profiles`.
+- **RBAC**: Access is restricted to users with the `role = 'admin'` in the `profiles` table.
+- **Service Role Integration**: Safely uses the Service Role key on the server to access sensitive Auth data (Last Seen, Joined Date).
+
+### User Management Actions
+From the User Directory, admins can:
+- **🗑️ Delete User**: Completely removes the user from Auth and Profiles.
+- **👑 Role Toggle**: Directly promote users to `admin` or demote to `user`.
+- **🕒 Audit Info**: View "Joined" timestamps for all users.
+
+### Security Implementation
+- **Server Actions**: All administrative actions are implemented via Next.js Server Actions with secondary admin validation.
+- **Service Role**: Utilizes the `SUPABASE_SERVICE_ROLE_KEY` on the server to bypass RLS for master administrative control.
+
+## 🚀 Deployment Guide
+
+Follow these steps to deploy your boilerplate to production.
+
+### 1. Supabase Preparation
+1.  **Project Creation**: Create a new project at [supabase.com](https://supabase.com).
+2.  **Database Setup**: Copy the contents of [`supabase/schema.sql`](supabase/schema.sql) and run it in the **SQL Editor**.
+3.  **Storage**: Ensure the `avatars` bucket exists (automatically created by the script) and is marked as **Public**.
+
+### 2. Vercel Deployment
+1.  **Connect Repo**: Import your GitHub repository to [Vercel](https://vercel.com).
+2.  **Environment Variables**: Add the following keys:
+    - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL.
+    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your project's `anon` public key.
+    - `SUPABASE_SERVICE_ROLE_KEY`: Your project's `service_role` secret key (Mandatory for Admin Panel).
+3.  **Deploy**: Hit deploy! Next.js 16 will automatically optimize your build.
+
+### 3. Post-Deployment Checklist
+- [ ] **Auth Signups**: Test a real signup to ensure the email trigger works.
+- [ ] **Admin Access**: Manually promote your first user to 'admin' in the Supabase SQL editor to unlock the dashboard.
+- [ ] **Avatars**: Test an image upload to verify Storage bucket permissions.
+- [ ] **Rate Limiting**: Verify middleware is active by checking the X-RateLimit headers.
 
 ## 🤝 Contributing
 

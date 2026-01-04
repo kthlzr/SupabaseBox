@@ -67,9 +67,14 @@ export function ProfileForm({ user }: { user: any }) {
       setUpdating(true)
       setSaved(false)
       
+      // Convert empty strings to null to avoid database constraint violations
+      const cleanData = Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, value === '' ? null : value])
+      )
+
       const updates = {
         id: user.id,
-        ...data,
+        ...cleanData,
         avatar_url: newAvatarUrl || avatarUrl,
         updated_at: new Date().toISOString(),
       }

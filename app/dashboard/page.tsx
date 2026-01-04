@@ -1,9 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { isAdmin } from '@/lib/supabase/admin'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
+  const isUserAdmin = await isAdmin()
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -59,6 +62,14 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {isUserAdmin && (
+              <Link
+                href="/admin"
+                className="px-4 py-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors text-sm font-medium text-emerald-400"
+              >
+                Admin Panel
+              </Link>
+            )}
             <Link
               href="/dashboard/settings"
               className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium"
