@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>Next.js + Supabase Boilerplate</h1>
+  <p>A production-ready, modern full-stack starter with authentication, database, and beautiful UI</p>
+  
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#quick-start">Quick Start</a> •
+    <a href="#scripts">Scripts</a> •
+    <a href="#deployment">Deployment</a>
+  </p>
 
-## Getting Started
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
+  </p>
+</div>
 
-First, run the development server:
+---
+
+## ✨ Features
+
+- ⚡ **Next.js 16** with App Router and Turbopack support
+- 🔐 **Complete Authentication** - Sign up with email confirmation, login, and password reset flow
+- 💾 **Supabase Integration** - Secure database access with `@supabase/ssr`
+- 🎨 **Tailwind CSS 4** - Modern CSS-first styling with custom theme variables
+- 🛡️ **Rate Limiting** - Built-in security middleware for API protection
+- ✅ **Type-Safe Validation** - Powered by **Zod 4.x** and React Hook Form
+- 🎯 **Developer Experience** - ESLint, Prettier, and TypeScript pre-configured
+- 📱 **Premium UI** - Responsive glassmorphism design with sleek animations
+
+## 📋 Prerequisites
+
+- Node.js 18.18+
+- A [Supabase](https://supabase.com) project
+
+## 🛠️ Getting Started
+
+### 1. Clone and Install
+
+```bash
+git clone https://github.com/kthlzr/nextjs-supabase-boilerplate.git
+cd nextjs-supabase-boilerplate
+npm install
+```
+
+### 2. Configure Environment
+
+Create a `.env.local` file in the root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### 3. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+├── app/                  # Next.js App Router
+│   ├── auth/callback/    # Supabase auth callback route
+│   ├── dashboard/        # Protected dashboard example
+│   ├── login/            # Login page logic
+│   ├── signup/           # Signup page logic
+│   ├── reset-password/   # Password reset request
+│   ├── update-password/  # Password reset completion
+│   ├── globals.css       # Tailwind 4 theme & styles
+│   └── layout.tsx        # Root layout & providers
+├── components/           # UI Components
+│   └── auth/             # Login and Signup forms
+├── lib/                  # Utility functions
+│   ├── supabase/         # Client, Server, and Middleware setup
+│   └── rate-limit.ts     # In-memory rate limiting
+├── proxy.ts              # Next.js 16 Middleware proxy
+├── package.json          # Scripts and dependencies
+└── tsconfig.json         # TypeScript configuration
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧰 Available Scripts
 
-## Learn More
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build the application for production
+- `npm run type-check` - Run TypeScript compiler checks
+- `npm run eslint:fix` - Lint and auto-fix code style
+- `npm run format` - Format code with Prettier
+- `npm run clean` - Deep clean build artifacts and modules
 
-To learn more about Next.js, take a look at the following resources:
+## 🔐 Authentication Flows
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The boilerplate comes with "batteries-included" authentication:
+- **Middleware Protected**: Automatic redirection for private routes.
+- **Email Confirmation**: Verified signups via Supabase Auth.
+- **Identity Check**: Smart signup feedback if an email is already registered.
+- **Password Reset**: End-to-end flow for forgotten passwords.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Protected Routes
 
-## Deploy on Vercel
+Add authentication to any server-side page by using the server client:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```tsx
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export default async function ProtectedPage() {
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect('/login');
+  }
+
+  return <div>Protected content for {user.email}</div>;
+}
+```
+
+## 🗄️ Database
+
+Use the Supabase client to interact with your database:
+
+```tsx
+import { createClient } from '@/lib/supabase/server';
+
+export async function getData() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('your_table')
+    .select('*');
+    
+  return { data, error };
+}
+```
+
+## 🚀 Deployment
+
+### Vercel
+1. Connect your GitHub repository.
+2. Add your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environment variables.
+3. Deploy!
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+  <p>Built for high-performance SaaS development</p>
+  <p>
+    <a href="https://github.com/kthlzr">GitHub Profile</a>
+  </p>
+</div>
