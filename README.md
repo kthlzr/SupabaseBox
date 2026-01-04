@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>Next.js + Supabase Boilerplate</h1>
-  <p>A production-ready, modern full-stack starter with authentication, database, and beautiful UI</p>
+  <h1>SupabaseBox</h1>
+  <p>A production-ready, minimalist full-stack starter built with Supabase and Next.js, featuring authentication, database, and premium UI</p>
   
   <p>
     <a href="#features">Features</a> •
