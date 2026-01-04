@@ -16,6 +16,12 @@
     <img src="https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss" alt="Tailwind" />
     <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
   </p>
+
+  <br />
+
+  <p align="center">
+    <img src="https://i.ibb.co/GQqHR8cB/supabasebox1.png" alt="Landing Page" width="800" />
+  </p>
 </div>
 
 ---
