@@ -49,21 +49,24 @@ cd nextjs-supabase-boilerplate
 npm install
 ```
 
-### 2. Configure Environment
-
-Create a `.env.local` file in the root:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key # Used for Admin Dashboard
-```
-
 ### 3. Run Development Server
 
 ```bash
 npm run dev
 ```
+
+## 🔐 Environment Configuration
+
+Create a `.env.local` file in the root directory. Below are the required variables:
+
+| Variable | Description | Location in Supabase |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your project's API URL | Project Settings > API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public API key for client-side use | Project Settings > API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret key for administrative tasks | Project Settings > API (KEEP SECRET) |
+
+> [!CAUTION]
+> **Never** expose the `SUPABASE_SERVICE_ROLE_KEY` on the client side. It is used exclusively in server components and server actions to manage users and bypass RLS.
 
 ## 📁 Project Structure
 
