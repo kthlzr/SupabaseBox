@@ -137,6 +137,34 @@ export async function getData() {
 }
 ```
 
+## 🌍 Social Authentication
+
+The boilerplate includes a pre-built `SocialAuth` component for Google and GitHub.
+
+### 1. Manual Setup in Supabase
+To enable OAuth providers, you must configure them in your Supabase Dashboard:
+1. Go to **Authentication** -> **Providers**.
+2. **GitHub**: Create a GitHub OAuth App and copy the Client ID/Secret.
+3. **Google**: Create a Google Cloud Project with OAuth 2.0 credentials and copy the Client ID/Secret.
+4. Add the **Redirect URL** provided by Supabase to your provider's settings.
+
+### 2. Usage & UI Control
+
+The `SocialAuth` component can be customized or hidden entirely:
+
+```tsx
+import { SocialAuth } from '@/components/auth/social-auth';
+
+// Default: Show all providers
+<SocialAuth />
+
+// Only show GitHub
+<SocialAuth providers={['github']} />
+
+// Hide the entire social auth section
+<SocialAuth show={false} />
+```
+
 ## 🚀 Deployment
 
 ### Vercel

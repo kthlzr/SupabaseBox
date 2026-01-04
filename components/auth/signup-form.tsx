@@ -6,7 +6,9 @@ import { createClient } from '@/lib/supabase/client'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
+import { SocialAuth } from './social-auth'
 
 const signupSchema = z
   .object({
@@ -21,7 +23,15 @@ const signupSchema = z
 
 type SignupFormValues = z.infer<typeof signupSchema>
 
-export default function SignupForm() {
+interface SignupFormProps {
+  showSocialAuth?: boolean
+  providers?: ('google' | 'github')[]
+}
+
+export default function SignupForm({
+  showSocialAuth = true,
+  providers = ['google', 'github'],
+}: SignupFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -126,10 +136,12 @@ export default function SignupForm() {
       <button
         disabled={isLoading}
         type="submit"
-        className="flex w-full items-center justify-center rounded-lg bg-white p-3 text-sm font-semibold text-black transition-all hover:bg-zinc-200 disabled:opacity-50 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+        className="flex w-full items-center justify-center rounded-lg bg-white p-3 text-sm font-semibold text-black transition-all hover:bg-zinc-200 disabled:opacity-50"
       >
-        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Create Account'}
+        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign Up'}
       </button>
+
+      <SocialAuth show={showSocialAuth} providers={providers} />
     </form>
   )
 }

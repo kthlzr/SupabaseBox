@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
+import { SocialAuth } from './social-auth'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -16,7 +17,15 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>
 
-export default function LoginForm() {
+interface LoginFormProps {
+  showSocialAuth?: boolean
+  providers?: ('google' | 'github')[]
+}
+
+export default function LoginForm({ 
+  showSocialAuth = true, 
+  providers = ['google', 'github'] 
+}: LoginFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -98,6 +107,8 @@ export default function LoginForm() {
       >
         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In'}
       </button>
+
+      <SocialAuth show={showSocialAuth} providers={providers} />
     </form>
   )
 }
