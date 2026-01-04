@@ -144,9 +144,33 @@ export async function getData() {
 2. Add your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environment variables.
 3. Deploy!
 
+## 🤝 Contributing
+
+Contributions are welcome! Here's how to contribute:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/)
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation changes
+   - `chore:` for maintenance tasks
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request with a clear description
+
+## 💬 Support
+
+- 🐛 [Report Bug](https://github.com/kthlzr/nextjs-supabase-boilerplate/issues)
+- 💡 [Request Feature](https://github.com/kthlzr/nextjs-supabase-boilerplate/issues)
+- 💬 [Discussions](https://github.com/kthlzr/nextjs-supabase-boilerplate/discussions)
+
+## ⭐ Show Your Support
+
+If you find this project helpful, please consider giving it a star on GitHub!
+
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
