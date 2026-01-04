@@ -18,10 +18,6 @@
   </p>
 
   <br />
-
-  <p align="center">
-    <img src="https://i.ibb.co/GQqHR8cB/supabasebox1.png" alt="Landing Page" width="800" />
-  </p>
 </div>
 
 ---
