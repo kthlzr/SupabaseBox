@@ -40,8 +40,8 @@
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/kthlzr/nextjs-supabase-boilerplate.git
-cd nextjs-supabase-boilerplate
+git clone https://github.com/kthlzr/SupabaseBox.git
+cd SupabaseBox
 npm install
 ```
 
