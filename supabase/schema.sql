@@ -13,6 +13,17 @@ create table if not exists profiles (
   constraint username_length check (username is null or char_length(username) >= 3)
 );
 
+-- Ensure columns exist if table was created earlier
+do $$ 
+begin 
+  if not exists (select 1 from information_schema.columns where table_name='profiles' and column_name='email') then
+    alter table public.profiles add column email text;
+  end if;
+  if not exists (select 1 from information_schema.columns where table_name='profiles' and column_name='role') then
+    alter table public.profiles add column role text default 'user' check (role in ('user', 'admin'));
+  end if;
+end $$;
+
 -- Set up Row Level Security
 alter table profiles enable row level security;
 alter table profiles replica identity full;
@@ -70,3 +81,37 @@ create policy "Anyone can upload an avatar." on storage.objects
 drop policy if exists "Anyone can update their own avatar." on storage.objects;
 create policy "Anyone can update their own avatar." on storage.objects
   for update with check (auth.uid() = owner and bucket_id = 'avatars');
+
+-- Audit Logs table for tracking administrative actions
+create table if not exists audit_logs (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default now(),
+  actor_id uuid references auth.users not null,
+  actor_email text,
+  action text not null,
+  target_user_id uuid,
+  target_user_email text,
+  metadata jsonb default '{}'::jsonb
+);
+
+-- Ensure actor_email exists if table was created earlier
+do $$ 
+begin 
+  if not exists (select 1 from information_schema.columns where table_name='audit_logs' and column_name='actor_email') then
+    alter table public.audit_logs add column actor_email text;
+  end if;
+end $$;
+
+-- RLS for audit_logs
+alter table audit_logs enable row level security;
+
+-- Only admins can see audit logs
+drop policy if exists "Admins can view all audit logs" on audit_logs;
+create policy "Admins can view all audit logs" on audit_logs
+  for select using (
+    exists (
+      select 1 from profiles 
+      where profiles.id = auth.uid() 
+      and profiles.role = 'admin'
+    )
+  );

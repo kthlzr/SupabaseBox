@@ -29,7 +29,8 @@
 - 🛡️ **Rate Limiting** - Built-in security middleware for API protection
 - 👤 **User Profiles** - Dedicated profiles table linked to Auth users
 - 🖼️ **Avatar Management** - Profile picture uploads via Supabase Storage
-- 🛡️ **Admin Dashboard** - Role-based access control (RBAC) with platform stats and user directory
+- 🛡️ **Admin Dashboard** - Minimalist, compact "terminal" UI with real-time stats and management
+- 📜 **Audit Logging** - Full traceability of admin actions with detailed user identifiers and actor accountability
 - ✅ **Type-Safe Validation** - Powered by **Zod 4.x** and React Hook Form
 - 🎯 **Developer Experience** - ESLint, Prettier, and TypeScript pre-configured
 - 📱 **Premium UI** - Responsive glassmorphism design with sleek animations
@@ -72,28 +73,30 @@ Create a `.env.local` file in the root directory. Below are the required variabl
 
 ```
 ├── app/                  # Next.js App Router
+│   ├── admin/            # Admin Dashboard (Protected)
 │   ├── auth/callback/    # Supabase auth callback route
-│   ├── dashboard/        # Protected dashboard
+│   ├── dashboard/        # Protected user dashboard
 │   │   └── settings/     # Profile settings page
-│   ├── login/            # Login page logic
-│   ├── signup/           # Signup page logic
-│   ├── reset-password/   # Password reset request
-│   ├── update-password/  # Password reset completion
+│   ├── login/ / signup/  # Auth entry points
+│   ├── reset-password/   # Password reset flows
 │   ├── globals.css       # Tailwind 4 theme & styles
 │   └── layout.tsx        # Root layout & providers
 ├── components/           # UI Components
-│   ├── auth/             # Login and Signup forms
-│   └── profile/          # Profile and Avatar components
+│   ├── admin/            # Admin UI, Actions, and Audit list
+│   ├── auth/             # Login, Signup, and Social forms
+│   └── profile/          # Profile and Avatar management
+├── hooks/                # Custom React hooks
+│   └── use-realtime.ts   # Realtime Presence & Notifications
 ├── lib/                  # Utility functions
-│   ├── supabase/         # Client, Server, and Middleware setup
-│   │   ├── client.ts     # Client-side Supabase
-│   │   ├── server.ts     # Server-side Supabase
-│   │   ├── admin.ts      # Admin auth helpers
-│   │   └── service-role.ts # Service Role client (Master)
-│   └── rate-limit.ts     # In-memory rate limiting
+│   ├── supabase/         # Client, Server, and Admin logic
+│   │   ├── admin-actions.ts # Admin-only server actions
+│   │   ├── service-role.ts # Service Role client (Master)
+│   │   └── middleware.ts # Session & Protected routes logic
+│   └── rate-limit.ts     # In-memory rate limiting protection
+├── supabase/             # Database & Schema
+│   └── schema.sql        # Idempotent DB setup script
 ├── proxy.ts              # Next.js 16 Middleware proxy
-├── package.json          # Scripts and dependencies
-└── tsconfig.json         # TypeScript configuration
+└── package.json          # Deployment & build scripts
 ```
 
 ## 🧰 Available Scripts
@@ -186,30 +189,31 @@ The boilerplate includes a complete profile management system:
 - **Settings Page**: Pre-built UI at `/dashboard/settings` for users to update their info (Username, Full Name, Avatar).
 
 ### Database Setup
-Run the SQL found in [`supabase/schema.sql`](supabase/schema.sql) in your Supabase SQL Editor to set up the:
-- `profiles` table.
-- `handle_new_user` trigger.
+Run the SQL found in [`supabase/schema.sql`](supabase/schema.sql) in your Supabase SQL Editor. The script is idempotent and includes:
+- `profiles` table with automatic row-sync.
+- `audit_logs` table for administrative tracking.
+- `handle_new_user` trigger for instant profile creation.
 - `avatars` storage bucket and RLS policies.
 
-## 🛡️ Admin Dashboard & RBAC
+## 🛡️ Admin Dashboard (Terminal UI)
 
-The boilerplate includes a secure Admin Dashboard at `/admin` that merges data from Supabase Auth and the Profiles table.
+The boilerplate includes a secure, minimalist Admin Dashboard at `/admin` designed for high-density management and real-time oversight.
 
-### Features
-- **Unified List**: Displays all users from `auth.users` merged with metadata from `public.profiles`.
-- **RBAC**: Access is restricted to users with the `role = 'admin'` in the `profiles` table.
-- **Service Role Integration**: Safely uses the Service Role key on the server to access sensitive Auth data (Last Seen, Joined Date).
+### Key Features
+- **🗜️ Minimalist Terminal**: A compact, dark-themed UI designed for efficiency and scanning large user bases.
+- **👑 Advanced RBAC**: Access restricted to `admin` roles, managed via server actions and the Service Role master client.
+- **🤴 User Management**: promote/demote or delete users directly from the directory with instant feedback.
+- **🛰️ Live Presence**: Real-time "Active Pulse" indicator showing exactly who is online.
 
-### User Management Actions
-From the User Directory, admins can:
-- **🗑️ Delete User**: Completely removes the user from Auth and Profiles.
-- **👑 Role Toggle**: Directly promote users to `admin` or demote to `user`.
-- **🕒 Audit Info**: View "Joined" timestamps for all users.
+### 📜 Audit Trail & Accountability
+Every administrative action is permanently recorded for security and oversight:
+- **Detailed Tracking**: Logs use the format `username (fullname) (id)` for unambiguous identification.
+- **Actor Accountability**: Every log entry explicitly identifies who performed the action (e.g., `by: admin@example.com`).
+- **Informative Metadata**: Captures old/new roles and user details even if the target user is later deleted.
 
 ### ⚡ Realtime Features
-The dashboard includes live presence and event notifications:
-- **Presence**: See exactly who is online with live count and status dots.
-- **Toasts**: Real-time `sonner` notifications when new users join or profiles are updated.
+- **Presence**: Real-time stats for currently online users.
+- **Toasts**: Instant `sonner` notifications for new signups and role changes.
 
 #### Enable Realtime (Required)
 To see live updates and accurate role change notifications, you must configure your `profiles` table:

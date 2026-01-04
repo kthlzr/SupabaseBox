@@ -3,6 +3,7 @@ import { isAdmin } from '@/lib/supabase/admin'
 import { createServiceRoleClient } from '@/lib/supabase/service-role'
 import { redirect } from 'next/navigation'
 import { AdminDashboardUI } from '@/components/admin/admin-dashboard-ui'
+import { AuditLogList } from '@/components/admin/audit-log-list'
 
 export default async function AdminDashboardPage() {
   const isUserAdmin = await isAdmin()
@@ -42,5 +43,16 @@ export default async function AdminDashboardPage() {
     }
   }).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
-  return <AdminDashboardUI initialUsers={joinedUsers} totalUserCount={authUsers.length} />
+  // 4. Fetch Audit Logs
+  const { data: logs, error: logError } = await adminClient
+    .from('audit_logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  if (logError) {
+    console.error('Failed to fetch audit logs:', logError.message)
+  }
+
+  return <AdminDashboardUI initialUsers={joinedUsers} totalUserCount={authUsers.length} logs={logs || []} />
 }

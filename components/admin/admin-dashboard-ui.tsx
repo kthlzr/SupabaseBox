@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Users, Shield, ArrowLeft, BarChart3, Activity, Mail, Calendar, Search } from 'lucide-react'
+import { ArrowLeft, Search, Mail, Shield, Users, Activity, BarChart3, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { UserActions } from '@/components/admin/user-actions'
 import { useRealtime } from '@/hooks/use-realtime'
+import { AuditLogList } from './audit-log-list'
 
 interface JoinedUser {
   id: string
@@ -18,200 +19,165 @@ interface JoinedUser {
 }
 
 interface AdminDashboardUIProps {
-  initialUsers: JoinedUser[]
+  initialUsers: any[]
   totalUserCount: number
+  logs: any[]
 }
 
-export function AdminDashboardUI({ initialUsers, totalUserCount }: AdminDashboardUIProps) {
+export function AdminDashboardUI({ initialUsers, totalUserCount, logs }: AdminDashboardUIProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const { onlineUsers } = useRealtime()
 
   const filteredUsers = useMemo(() => {
     return initialUsers.filter(user => 
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.username?.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [searchQuery, initialUsers])
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-4 md:p-8 selection:bg-emerald-500/30">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <header className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 border-b border-white/10 pb-8">
-          <div className="flex items-center gap-5">
-            <Link
-              href="/dashboard"
-              className="group flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition-all hover:bg-white/10 hover:scale-105 active:scale-95"
-            >
-              <ArrowLeft className="h-5 w-5 text-zinc-400 group-hover:text-white transition-colors" />
-            </Link>
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                  <Shield className="h-6 w-6 text-emerald-400" />
+    <div className="min-h-screen bg-[#050505] text-zinc-400 font-sans selection:bg-emerald-500/30">
+      <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 space-y-8">
+        
+        {/* Compact Header */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3">
+              <Link href="/dashboard" className="p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all group">
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+              </Link>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-black text-white tracking-tighter uppercase italic">Control</h1>
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent tracking-tight">
-                  Admin Central
-                </h1>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black text-emerald-400 uppercase tracking-widest animate-pulse">
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                  Live Now: {onlineUsers.length}
-                </div>
+                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest leading-none mt-0.5">Terminal • v1.0.4</p>
               </div>
-              <p className="text-zinc-500 mt-1.5 font-medium ml-1">Command center for your growing community</p>
             </div>
           </div>
-
-          <div className="relative group max-w-md w-full md:w-80">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-emerald-400 transition-colors" />
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/40 transition-all placeholder:text-zinc-600 font-medium"
-            />
+          <div className="flex items-center gap-3">
+             <div className="px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-[10px] font-black text-emerald-500/80 uppercase tracking-widest">
+                Active: {onlineUsers.length}
+             </div>
+             <div className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">
+                Total: {totalUserCount}
+             </div>
           </div>
         </header>
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="group relative p-6 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/10 transition-colors shadow-2xl">
-             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center justify-between mb-4 relative z-10">
-              <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Total Community</h2>
-              <div className="p-2 rounded-lg bg-white/5">
-                <Users className="h-5 w-5 text-zinc-400" />
+        {/* Minimalist Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <div>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Network Size</p>
+              <p className="text-2xl font-black text-white tracking-tighter">{totalUserCount}</p>
+            </div>
+            <Users className="h-4 w-4 text-zinc-700" />
+          </div>
+          <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <div>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Live Pulse</p>
+              <div className="flex items-center gap-2">
+                <p className="text-2xl font-black text-emerald-500 tracking-tighter">{onlineUsers.length}</p>
+                <div className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-[8px] font-black text-emerald-500/80 uppercase tracking-tighter">Live</div>
               </div>
             </div>
-            <p className="text-5xl font-black tracking-tighter relative z-10">{totalUserCount}</p>
+            <Activity className="h-4 w-4 text-emerald-500/30" />
           </div>
-
-          <div className="group relative p-6 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/10 transition-colors shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center justify-between mb-4 relative z-10">
-              <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Active Pulse</h2>
-              <div className="p-2 rounded-lg bg-emerald-500/5">
-                <Activity className="h-5 w-5 text-emerald-500/70" />
-              </div>
+          <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <div>
+              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">System State</p>
+              <p className="text-2xl font-black text-zinc-300 tracking-tighter uppercase italic">Stable</p>
             </div>
-            <p className="text-5xl font-black tracking-tighter text-emerald-400 relative z-10">
-              {onlineUsers.length} <span className="text-sm text-zinc-600 font-bold uppercase tracking-widest ml-1">Live</span>
-            </p>
+            <Shield className="h-4 w-4 text-zinc-700" />
           </div>
+        </div>
 
-          <div className="group relative p-6 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/10 transition-colors shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center justify-between mb-4 relative z-10">
-              <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">System State</h2>
-              <div className="p-2 rounded-lg bg-blue-500/5">
-                <BarChart3 className="h-5 w-5 text-blue-500/70" />
-              </div>
-            </div>
-            <p className="text-5xl font-black tracking-tighter text-blue-400 relative z-10">CORE</p>
-          </div>
-        </section>
-
-        <section className="rounded-[2.5rem] border border-white/5 bg-white/[0.02] p-6 md:p-10 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-            <Shield className="h-64 w-64 rotate-12" />
-          </div>
-          
-          <div className="flex items-center justify-between mb-10 relative z-10">
-            <h2 className="text-2xl font-black flex items-center gap-3 tracking-tight">
-              <Users className="h-6 w-6 text-emerald-500" />
-              User Directory
-            </h2>
-            <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
-              Live Data
+        {/* Compact Table Section */}
+        <section className="space-y-4">
+          <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between">
+            <h2 className="text-xs font-black text-zinc-600 uppercase tracking-[0.3em]">Identity Registry</h2>
+            <div className="relative group max-w-xs w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-600 group-focus-within:text-emerald-500/50 transition-colors" />
+              <input 
+                type="text" 
+                placeholder="Find identity..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-2 pl-9 pr-4 text-xs font-bold text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:bg-white/[0.05] transition-all"
+              />
             </div>
           </div>
-          
-          <div className="overflow-x-auto relative z-10">
-            {filteredUsers.length > 0 ? (
-              <table className="w-full text-left">
+
+          <div className="rounded-3xl border border-white/5 bg-white/[0.01] overflow-hidden backdrop-blur-3xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
-                    <th className="pb-6 pr-4">Member</th>
-                    <th className="pb-6 px-4">Role</th>
-                    <th className="pb-6 px-4">Joined</th>
-                    <th className="pb-6 px-4 text-right">Settings</th>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest">Profile</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden md:table-cell">Identity</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest hidden lg:table-cell">Access</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest text-right">Command</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.03]">
-                  {filteredUsers.map((u) => (
-                    <tr key={u.id} className="group/row hover:bg-white/[0.01] transition-all duration-300">
-                      <td className="py-6 pr-4">
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 flex items-center justify-center font-black text-lg text-zinc-400 group-hover/row:border-emerald-500/30 group-hover/row:text-emerald-400 transition-all shadow-lg">
-                              {(u.full_name || u.email || '?')[0].toUpperCase()}
-                            </div>
-                            {onlineUsers.includes(u.id) && (
-                              <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-zinc-950 flex items-center justify-center">
-                                <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map((u) => (
+                      <tr key={u.id} className="group/row hover:bg-white/[0.01] transition-all">
+                        <td className="px-6 py-3">
+                          <div className="flex items-center gap-3">
+                            <div className="relative">
+                              <div className="h-9 w-9 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center font-black text-[11px] text-zinc-500 group-hover/row:border-emerald-500/20 group-hover/row:text-emerald-500/70 transition-all">
+                                {(u.full_name || u.email || '?')[0].toUpperCase()}
                               </div>
-                            )}
-                          </div>
-                          <div>
-                            <p className="font-bold text-zinc-100 group-hover/row:text-white transition-colors leading-none">
-                              {u.full_name || u.email?.split('@')[0] || 'Member'}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1.5">
-                              <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-                                <Mail className="h-3 w-3" />
-                                <span className="max-w-[150px] truncate">{u.email}</span>
-                              </div>
-                              {u.username && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white/5 text-zinc-500 uppercase tracking-tighter">
-                                  @{u.username}
-                                </span>
+                              {onlineUsers.includes(u.id) && (
+                                <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#050505] flex items-center justify-center">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                </div>
                               )}
                             </div>
+                            <div className="min-w-0">
+                              <p className="text-xs font-bold text-zinc-200 truncate leading-none mb-1">{u.full_name || 'Anonymous'}</p>
+                              <p className="text-[10px] font-bold text-zinc-600 truncate uppercase tracking-tighter">@{u.username || 'unknown'}</p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-6 px-4">
-                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm border ${
-                          u.role === 'admin' 
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                            : 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
-                        }`}>
-                          {u.role}
-                        </span>
-                      </td>
-                      <td className="py-6 px-4">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500">
-                          <Calendar className="h-3.5 w-3.5 opacity-50" />
-                          {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </div>
-                      </td>
-                      <td className="py-6 px-4 text-right">
-                        <div className="inline-block transform group-hover/row:scale-105 transition-transform">
-                          <UserActions 
-                            userId={u.id} 
-                            currentRole={u.role} 
-                            userEmail={u.email} 
-                          />
-                        </div>
+                        </td>
+                        <td className="px-6 py-3 hidden md:table-cell">
+                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500">
+                             <Mail className="h-3 w-3 opacity-30" />
+                             {u.email}
+                          </div>
+                        </td>
+                        <td className="px-6 py-3 hidden lg:table-cell">
+                          <div className={`inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${
+                            u.role === 'admin' 
+                            ? 'bg-emerald-500/10 text-emerald-400/80 border border-emerald-500/10' 
+                            : 'bg-zinc-500/10 text-zinc-500 border border-white/5'
+                          }`}>
+                            {u.role || 'user'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-3 text-right">
+                          <UserActions userId={u.id} currentRole={u.role as 'user' | 'admin'} userEmail={u.email || ''} />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="py-12 text-center text-zinc-800">
+                        <p className="text-[10px] font-black uppercase tracking-widest italic opacity-40">Identity not found in registry</p>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
-            ) : (
-              <div className="py-20 flex flex-col items-center justify-center text-zinc-600 space-y-4">
-                <Search className="h-12 w-12 opacity-20" />
-                <p className="text-lg font-medium tracking-tight">No members found matching your search</p>
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="text-emerald-500 hover:text-emerald-400 text-sm font-bold uppercase tracking-widest transition-colors"
-                >
-                  Clear search
-                </button>
-              </div>
-            )}
+            </div>
           </div>
         </section>
+
+        {/* Audit Log Trail */}
+        <AuditLogList logs={logs} />
       </div>
     </div>
   )
