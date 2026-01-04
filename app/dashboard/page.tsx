@@ -199,7 +199,7 @@ export default async function DashboardPage() {
 
         {/* Site Footer */}
         <footer className="pt-12 border-t border-white/[0.03] flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] font-black text-zinc-700 uppercase tracking-widest italic">
-          <p>© 2026 NEXTJS-SUPABASE-BOILERPLATE. ALL RIGHTS RESERVED.</p>
+          <p>© 2026 SUPABASEBOX. ALL RIGHTS RESERVED.</p>
           <div className="flex items-center gap-6">
             <Link href="https://github.com/kthlzr" className="hover:text-zinc-500 transition-colors">GitHub Repository</Link>
             <div className="h-1 w-1 rounded-full bg-zinc-800" />
